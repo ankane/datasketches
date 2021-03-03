@@ -33,7 +33,7 @@ void bind_fi_sketch(Rice::Module& m, const char* name) {
       [](datasketches::frequent_items_sketch<T>& self) {
         return self.to_string();
       })
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       // TODO figure out segfault
       [](std::string is) {

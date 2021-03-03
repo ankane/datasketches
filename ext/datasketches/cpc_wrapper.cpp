@@ -49,7 +49,7 @@ void init_cpc(Rice::Module& m) {
       [](cpc_sketch& self) {
         return self.to_string();
       })
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       [](std::string& is) {
         std::istringstream iss(is);

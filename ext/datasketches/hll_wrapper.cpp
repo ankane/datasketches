@@ -50,7 +50,7 @@ void init_hll(Rice::Module& m) {
       [](hll_sketch& self) {
         return self.to_string();
       })
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       [](std::string& is) {
         std::istringstream iss(is);

@@ -33,7 +33,7 @@ void init_theta(Rice::Module& m) {
       });
 
   Rice::define_class_under<update_theta_sketch, theta_sketch>(m, "UpdateThetaSketch")
-    .define_singleton_method(
+    .define_singleton_function(
       "new",
       [](uint8_t lg_k, double p, uint64_t seed) {
         update_theta_sketch::builder builder;
@@ -60,7 +60,7 @@ void init_theta(Rice::Module& m) {
       [](update_theta_sketch& self) {
         return self.get_estimate();
       })
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       [](std::string& is) {
         std::istringstream iss(is);
@@ -68,7 +68,7 @@ void init_theta(Rice::Module& m) {
       });
 
   Rice::define_class_under<compact_theta_sketch, theta_sketch>(m, "CompactThetaSketch")
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       [](std::string& is) {
         std::istringstream iss(is);
@@ -76,7 +76,7 @@ void init_theta(Rice::Module& m) {
       });
 
   Rice::define_class_under<theta_union>(m, "ThetaUnion")
-    .define_singleton_method(
+    .define_singleton_function(
       "new",
       [](uint8_t lg_k, double p, uint64_t seed) {
         theta_union::builder builder;

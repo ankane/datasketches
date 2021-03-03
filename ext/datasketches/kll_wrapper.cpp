@@ -149,7 +149,7 @@ void bind_kll_sketch(Rice::Module& m, const char* name) {
       [](kll_sketch<T>& self) {
         return self.to_string();
       })
-    .define_singleton_method(
+    .define_singleton_function(
       "deserialize",
       [](std::string& is) {
         std::istringstream iss(is);
