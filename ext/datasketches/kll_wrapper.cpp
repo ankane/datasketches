@@ -16,7 +16,7 @@ namespace Rice::detail
       auto a = Rice::Array(x);
       std::vector<int> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = from_ruby<int>(a[i]);
+        vec[i] = From_Ruby<int>::convert(a[i]);
       }
       return vec;
     }
@@ -30,7 +30,7 @@ namespace Rice::detail
       auto a = Rice::Array(x);
       std::vector<float> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = from_ruby<float>(a[i]);
+        vec[i] = From_Ruby<float>::convert(a[i]);
       }
       return vec;
     }
@@ -44,7 +44,7 @@ namespace Rice::detail
       auto a = Rice::Array(x);
       std::vector<double> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = from_ruby<double>(a[i]);
+        vec[i] = From_Ruby<double>::convert(a[i]);
       }
       return vec;
     }
