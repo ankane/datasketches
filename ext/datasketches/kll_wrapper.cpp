@@ -2,9 +2,7 @@
 
 #include <kll_sketch.hpp>
 
-#include <rice/Array.hpp>
-#include <rice/Constructor.hpp>
-#include <rice/Module.hpp>
+#include <rice/rice.hpp>
 
 using datasketches::kll_sketch;
 
@@ -84,7 +82,7 @@ void bind_kll_sketch(Rice::Module& m, const char* name) {
     .define_method("quantile", &kll_sketch<T>::get_quantile)
     .define_method(
       "quantiles",
-      *[](kll_sketch<T>& self, Rice::Object obj) {
+      [](kll_sketch<T>& self, Rice::Object obj) {
         if (obj.is_a(rb_cArray)) {
           auto fractions = from_ruby<std::vector<double>>(obj);
           return self.get_quantiles(&fractions[0], fractions.size());
@@ -94,32 +92,32 @@ void bind_kll_sketch(Rice::Module& m, const char* name) {
       })
     .define_method(
       "rank",
-      *[](kll_sketch<T>& self, const T item) {
+      [](kll_sketch<T>& self, const T item) {
         return self.get_rank(item);
       })
     .define_method(
       "pmf",
-      *[](kll_sketch<T>& self, std::vector<T> split_points) {
+      [](kll_sketch<T>& self, std::vector<T> split_points) {
         return self.get_PMF(&split_points[0], split_points.size());
       })
     .define_method(
       "cdf",
-      *[](kll_sketch<T>& self, std::vector<T> split_points) {
+      [](kll_sketch<T>& self, std::vector<T> split_points) {
         return self.get_CDF(&split_points[0], split_points.size());
       })
     .define_method(
       "merge",
-      *[](kll_sketch<T>& self, const kll_sketch<T>& other) {
+      [](kll_sketch<T>& self, const kll_sketch<T>& other) {
         self.merge(other);
       })
     .define_method(
       "update",
-      *[](kll_sketch<T>& self, const T item) {
+      [](kll_sketch<T>& self, const T item) {
         self.update(item);
       })
     .define_method(
       "serialize",
-      *[](kll_sketch<T>& self) {
+      [](kll_sketch<T>& self) {
         std::ostringstream oss;
         self.serialize(oss);
         return oss.str();
@@ -127,12 +125,12 @@ void bind_kll_sketch(Rice::Module& m, const char* name) {
     // TODO change to summary?
     .define_method(
       "to_string",
-      *[](kll_sketch<T>& self) {
+      [](kll_sketch<T>& self) {
         return self.to_string();
       })
     .define_singleton_method(
       "deserialize",
-      *[](std::string& is) {
+      [](std::string& is) {
         std::istringstream iss(is);
         return kll_sketch<T>::deserialize(iss);
       });

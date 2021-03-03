@@ -3,8 +3,7 @@
 #include <cpc_sketch.hpp>
 #include <cpc_union.hpp>
 
-#include <rice/Constructor.hpp>
-#include <rice/Module.hpp>
+#include <rice/rice.hpp>
 
 using datasketches::cpc_sketch;
 using datasketches::cpc_union;
@@ -23,7 +22,7 @@ void init_cpc(Rice::Module& m) {
     .define_method("upper_bound", &cpc_sketch::get_upper_bound)
     .define_method(
       "update",
-      *[](cpc_sketch& self, Rice::Object datum) {
+      [](cpc_sketch& self, Rice::Object datum) {
         if (FIXNUM_P(datum.value())) {
           return self.update(from_ruby<int64_t>(datum));
         } else if (datum.is_a(rb_cNumeric)) {
@@ -34,12 +33,12 @@ void init_cpc(Rice::Module& m) {
       })
     .define_method(
       "estimate",
-      *[](cpc_sketch& self) {
+      [](cpc_sketch& self) {
         return self.get_estimate();
       })
     .define_method(
       "serialize",
-      *[](cpc_sketch& self) {
+      [](cpc_sketch& self) {
         std::ostringstream oss;
         self.serialize(oss);
         return oss.str();
@@ -47,12 +46,12 @@ void init_cpc(Rice::Module& m) {
     // TODO change to summary?
     .define_method(
       "to_string",
-      *[](cpc_sketch& self) {
+      [](cpc_sketch& self) {
         return self.to_string();
       })
     .define_singleton_method(
       "deserialize",
-      *[](std::string& is) {
+      [](std::string& is) {
         std::istringstream iss(is);
         return cpc_sketch::deserialize(iss);
       });
@@ -62,7 +61,7 @@ void init_cpc(Rice::Module& m) {
     .define_method("result", &cpc_union::get_result)
     .define_method(
       "update",
-      *[](cpc_union& self, cpc_sketch& sketch) {
+      [](cpc_union& self, cpc_sketch& sketch) {
         self.update(sketch);
       });
 }

@@ -1,4 +1,4 @@
-#include <rice/Module.hpp>
+#include <rice/rice.hpp>
 
 void init_cpc(Rice::Module& m);
 void init_fi(Rice::Module& m);
