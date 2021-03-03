@@ -48,9 +48,9 @@ void init_theta(Rice::Module& m) {
       "update",
       [](update_theta_sketch& self, Rice::Object datum) {
         if (FIXNUM_P(datum.value())) {
-          return self.update(from_ruby<int64_t>(datum));
+          return self.update(Rice::detail::From_Ruby<int64_t>::convert(datum));
         } else if (datum.is_a(rb_cNumeric)) {
-          return self.update(from_ruby<double>(datum));
+          return self.update(Rice::detail::From_Ruby<double>::convert(datum));
         } else {
           return self.update(datum.to_s().str());
         }

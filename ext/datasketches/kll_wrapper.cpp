@@ -6,67 +6,88 @@
 
 using datasketches::kll_sketch;
 
-template<>
-std::vector<int> from_ruby<std::vector<int>>(Rice::Object x)
+namespace Rice::detail
 {
-  auto a = Rice::Array(x);
-  std::vector<int> vec(a.size());
-  for (long i = 0; i < a.size(); i++) {
-    vec[i] = from_ruby<int>(a[i]);
-  }
-  return vec;
-}
+  template<>
+  struct From_Ruby<std::vector<int>>
+  {
+    static std::vector<int> convert(Object x)
+    {
+      auto a = Rice::Array(x);
+      std::vector<int> vec(a.size());
+      for (long i = 0; i < a.size(); i++) {
+        vec[i] = from_ruby<int>(a[i]);
+      }
+      return vec;
+    }
+  };
 
-template<>
-std::vector<float> from_ruby<std::vector<float>>(Rice::Object x)
-{
-  auto a = Rice::Array(x);
-  std::vector<float> vec(a.size());
-  for (long i = 0; i < a.size(); i++) {
-    vec[i] = from_ruby<float>(a[i]);
-  }
-  return vec;
-}
+  template<>
+  struct From_Ruby<std::vector<float>>
+  {
+    static std::vector<float> convert(Object x)
+    {
+      auto a = Rice::Array(x);
+      std::vector<float> vec(a.size());
+      for (long i = 0; i < a.size(); i++) {
+        vec[i] = from_ruby<float>(a[i]);
+      }
+      return vec;
+    }
+  };
 
-template<>
-std::vector<double> from_ruby<std::vector<double>>(Rice::Object x)
-{
-  auto a = Rice::Array(x);
-  std::vector<double> vec(a.size());
-  for (long i = 0; i < a.size(); i++) {
-    vec[i] = from_ruby<double>(a[i]);
-  }
-  return vec;
-}
+  template<>
+  struct From_Ruby<std::vector<double>>
+  {
+    static std::vector<double> convert(Object x)
+    {
+      auto a = Rice::Array(x);
+      std::vector<double> vec(a.size());
+      for (long i = 0; i < a.size(); i++) {
+        vec[i] = from_ruby<double>(a[i]);
+      }
+      return vec;
+    }
+  };
 
-template<>
-Rice::Object to_ruby<std::vector<int>>(std::vector<int> const & x)
-{
-  auto a = Rice::Array();
-  for (size_t i = 0; i < x.size(); i++) {
-    a.push(x[i]);
-  }
-  return a;
-}
+  template<>
+  struct To_Ruby<std::vector<int>>
+  {
+    static Object convert(std::vector<int> const & x)
+    {
+      auto a = Rice::Array();
+      for (size_t i = 0; i < x.size(); i++) {
+        a.push(x[i]);
+      }
+      return a;
+    }
+  };
 
-template<>
-Rice::Object to_ruby<std::vector<float>>(std::vector<float> const & x)
-{
-  auto a = Rice::Array();
-  for (size_t i = 0; i < x.size(); i++) {
-    a.push(x[i]);
-  }
-  return a;
-}
+  template<>
+  struct To_Ruby<std::vector<float>>
+  {
+    static Object convert(std::vector<float> const & x)
+    {
+      auto a = Rice::Array();
+      for (size_t i = 0; i < x.size(); i++) {
+        a.push(x[i]);
+      }
+      return a;
+    }
+  };
 
-template<>
-Rice::Object to_ruby<std::vector<double>>(std::vector<double> const & x)
-{
-  auto a = Rice::Array();
-  for (size_t i = 0; i < x.size(); i++) {
-    a.push(x[i]);
-  }
-  return a;
+  template<>
+  struct To_Ruby<std::vector<double>>
+  {
+    static Object convert(std::vector<double> const & x)
+    {
+      auto a = Rice::Array();
+      for (size_t i = 0; i < x.size(); i++) {
+        a.push(x[i]);
+      }
+      return a;
+    }
+  };
 }
 
 template<typename T>
@@ -84,10 +105,10 @@ void bind_kll_sketch(Rice::Module& m, const char* name) {
       "quantiles",
       [](kll_sketch<T>& self, Rice::Object obj) {
         if (obj.is_a(rb_cArray)) {
-          auto fractions = from_ruby<std::vector<double>>(obj);
+          auto fractions = Rice::detail::From_Ruby<std::vector<double>>::convert(obj);
           return self.get_quantiles(&fractions[0], fractions.size());
         } else {
-          return self.get_quantiles(from_ruby<size_t>(obj));
+          return self.get_quantiles(Rice::detail::From_Ruby<size_t>::convert(obj));
         }
       })
     .define_method(
