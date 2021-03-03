@@ -72,7 +72,7 @@ Rice::Object to_ruby<std::vector<double>>(std::vector<double> const & x)
 template<typename T>
 void bind_kll_sketch(Rice::Module& m, const char* name) {
   Rice::define_class_under<kll_sketch<T>>(m, name)
-    .define_constructor(Rice::Constructor<kll_sketch<T>, uint16_t>(), (Rice::Arg("k")=kll_sketch<T>::DEFAULT_K))
+    .define_constructor(Rice::Constructor<kll_sketch<T>, uint16_t>(), Rice::Arg("k")=kll_sketch<T>::DEFAULT_K)
     .define_method("empty?", &kll_sketch<T>::is_empty)
     .define_method("n", &kll_sketch<T>::get_n)
     .define_method("num_retained", &kll_sketch<T>::get_num_retained)
