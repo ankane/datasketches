@@ -11,12 +11,12 @@ namespace Rice::detail
   template<>
   struct From_Ruby<std::vector<int>>
   {
-    static std::vector<int> convert(Object x)
+    static std::vector<int> convert(VALUE x)
     {
       auto a = Rice::Array(x);
       std::vector<int> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<int>::convert(a[i]);
+        vec[i] = From_Ruby<int>::convert(a[i].value());
       }
       return vec;
     }
@@ -25,12 +25,12 @@ namespace Rice::detail
   template<>
   struct From_Ruby<std::vector<float>>
   {
-    static std::vector<float> convert(Object x)
+    static std::vector<float> convert(VALUE x)
     {
       auto a = Rice::Array(x);
       std::vector<float> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<float>::convert(a[i]);
+        vec[i] = From_Ruby<float>::convert(a[i].value());
       }
       return vec;
     }
@@ -39,12 +39,12 @@ namespace Rice::detail
   template<>
   struct From_Ruby<std::vector<double>>
   {
-    static std::vector<double> convert(Object x)
+    static std::vector<double> convert(VALUE x)
     {
       auto a = Rice::Array(x);
       std::vector<double> vec(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<double>::convert(a[i]);
+        vec[i] = From_Ruby<double>::convert(a[i].value());
       }
       return vec;
     }
@@ -53,7 +53,7 @@ namespace Rice::detail
   template<>
   struct To_Ruby<std::vector<int>>
   {
-    static Object convert(std::vector<int> const & x)
+    static VALUE convert(std::vector<int> const & x)
     {
       auto a = Rice::Array();
       for (size_t i = 0; i < x.size(); i++) {
@@ -66,7 +66,7 @@ namespace Rice::detail
   template<>
   struct To_Ruby<std::vector<float>>
   {
-    static Object convert(std::vector<float> const & x)
+    static VALUE convert(std::vector<float> const & x)
     {
       auto a = Rice::Array();
       for (size_t i = 0; i < x.size(); i++) {
@@ -79,7 +79,7 @@ namespace Rice::detail
   template<>
   struct To_Ruby<std::vector<double>>
   {
-    static Object convert(std::vector<double> const & x)
+    static VALUE convert(std::vector<double> const & x)
     {
       auto a = Rice::Array();
       for (size_t i = 0; i < x.size(); i++) {
