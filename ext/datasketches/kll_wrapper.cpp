@@ -8,82 +8,29 @@ using datasketches::kll_sketch;
 
 namespace Rice::detail
 {
-  template<>
-  struct From_Ruby<std::vector<int>>
+  template<typename T>
+  struct From_Ruby<std::vector<T>>
   {
-    static std::vector<int> convert(VALUE x)
+    static std::vector<T> convert(VALUE x)
     {
       auto a = Rice::Array(x);
-      std::vector<int> vec(a.size());
+      std::vector<T> vec;
+      vec.reserve(a.size());
       for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<int>::convert(a[i].value());
+        vec.push_back(From_Ruby<T>::convert(a[i].value()));
       }
       return vec;
     }
   };
 
-  template<>
-  struct From_Ruby<std::vector<float>>
+  template<typename T>
+  struct To_Ruby<std::vector<T>>
   {
-    static std::vector<float> convert(VALUE x)
+    static VALUE convert(std::vector<T> const & x, bool takeOwnership = false)
     {
-      auto a = Rice::Array(x);
-      std::vector<float> vec(a.size());
-      for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<float>::convert(a[i].value());
-      }
-      return vec;
-    }
-  };
-
-  template<>
-  struct From_Ruby<std::vector<double>>
-  {
-    static std::vector<double> convert(VALUE x)
-    {
-      auto a = Rice::Array(x);
-      std::vector<double> vec(a.size());
-      for (long i = 0; i < a.size(); i++) {
-        vec[i] = From_Ruby<double>::convert(a[i].value());
-      }
-      return vec;
-    }
-  };
-
-  template<>
-  struct To_Ruby<std::vector<int>>
-  {
-    static VALUE convert(std::vector<int> const & x)
-    {
-      auto a = Rice::Array();
-      for (size_t i = 0; i < x.size(); i++) {
-        a.push(x[i]);
-      }
-      return a;
-    }
-  };
-
-  template<>
-  struct To_Ruby<std::vector<float>>
-  {
-    static VALUE convert(std::vector<float> const & x)
-    {
-      auto a = Rice::Array();
-      for (size_t i = 0; i < x.size(); i++) {
-        a.push(x[i]);
-      }
-      return a;
-    }
-  };
-
-  template<>
-  struct To_Ruby<std::vector<double>>
-  {
-    static VALUE convert(std::vector<double> const & x)
-    {
-      auto a = Rice::Array();
-      for (size_t i = 0; i < x.size(); i++) {
-        a.push(x[i]);
+      auto a = rb_ary_new2(x.size());
+      for (const auto& v : x) {
+        rb_ary_push(a, Rice::detail::To_Ruby<T>::convert(v, takeOwnership));
       }
       return a;
     }
